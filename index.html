@@ -1,5 +1,5 @@
 
-    TYPE html>
+  <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -31,64 +31,39 @@
     </div>
 
     <script>
-        let db;
+        let habits = JSON.parse(localStorage.getItem("habits")) || [];
 
-        function initDB() {
-            const request = indexedDB.open("GrowlyDB", 1);
-
-            request.onupgradeneeded = function(e) {
-                db = e.target.result;
-                if (!db.objectStoreNames.contains("habits")) {
-                    db.createObjectStore("habits", { keyPath: "id", autoIncrement: true });
-                }
-            };
-
-            request.onsuccess = function(e) {
-                db = e.target.result;
-                loadHabits();
-            };
-        }
-
-        function loadHabits() {
-            const tx = db.transaction("habits", "readonly");
-            const store = tx.objectStore("habits");
-            const req = store.getAll();
-
-            req.onsuccess = function() {
-                const list = document.getElementById("habits-list");
-                list.innerHTML = "";
-                req.result.forEach(h => {
-                    const div = document.createElement("div");
-                    div.className = "habit";
-                    div.innerHTML = `<span>${h.name}</span><button onclick="completeHabit(${h.id}, this)">✓</button>`;
-                    list.appendChild(div);
-                });
-            };
+        function renderHabits() {
+            const list = document.getElementById("habits-list");
+            list.innerHTML = "";
+            habits.forEach((habit, index) => {
+                const div = document.createElement("div");
+                div.className = "habit";
+                div.innerHTML = `
+                    <span>${habit.name}</span>
+                    <button onclick="completeHabit(${index}, this)">✓</button>
+                `;
+                list.appendChild(div);
+            });
         }
 
         function addHabit() {
             const name = prompt("Название новой привычки:");
-            if (!name) return;
-
-            const tx = db.transaction("habits", "readwrite");
-            const store = tx.objectStore("habits");
-            store.add({ name: name });
-
-            tx.oncomplete = () => {
+            if (name) {
+                habits.push({ name: name });
+                localStorage.setItem("habits", JSON.stringify(habits));
+                renderHabits();
                 alert('Привычка "' + name + '" добавлена!');
-                loadHabits();
-            };
+            }
         }
 
-        function completeHabit(id, btn) {
+        function completeHabit(index, btn) {
             btn.innerHTML = '✅';
             btn.style.background = '#45a049';
             alert('Молодец! Привычка отмечена 🔥');
         }
 
-        window.onload = initDB;
+        renderHabits();
     </script>
 </body>
 </html>
-
-
