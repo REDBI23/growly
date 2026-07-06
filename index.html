@@ -26,7 +26,7 @@
             padding: 25px;
             text-align: center;
         }
-        h1 {Ахишке</h1>
+        h1 {
             margin: 0;
             font-size: 32px;
         }
@@ -82,8 +82,9 @@
     <script>
         let habits = JSON.parse(localStorage.getItem("habits")) || [
             { name: "💧 Выпить 2 литра воды" },
-            { name: "🏃 Прогулка 30 минут" },
-            { name: "📖 Читать 20 минут" }
+            { name: "🏃 зарубиться 30 минут" },
+            { name: "📖 побухать 20 минут" }
+            
         ];
 
         function renderHabits() {
@@ -113,7 +114,7 @@
         function completeHabit(index, btn) {
             btn.innerHTML = '✅';
             btn.style.background = '#45a049';
-            alert('Молодец, Ахишке! 🔥');
+            alert('Молодец, Ахи! 🔥');
         }
 
         renderHabits();
