@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Growly - Трекер привычек</title>
+    <title>Growly - Для Ахишке</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -29,6 +29,11 @@
         h1 {
             margin: 0;
             font-size: 32px;
+        }
+        .subtitle {
+            margin: 5px 0 0;
+            font-size: 18px;
+            opacity: 0.9;
         }
         .content {
             padding: 25px;
@@ -61,15 +66,23 @@
             padding: 16px;
             font-size: 18px;
         }
+        .dedication {
+            text-align: center;
+            margin: 20px 0;
+            color: #666;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>🌱 Growly</h1>
-            <p>Твой трекер привычек</p>
+            <p class="subtitle">Твой трекер привычек</p>
         </header>
         <div class="content">
+            <div class="dedication">Сделано специально для Ахишке ❤️</div>
+            
             <h2>Сегодня</h2>
             <div id="habits-list"></div>
             <button class="add-btn" onclick="addHabit()">+ Добавить новую привычку</button>
@@ -77,7 +90,11 @@
     </div>
 
     <script>
-        let habits = JSON.parse(localStorage.getItem("habits")) || [];
+        let habits = JSON.parse(localStorage.getItem("habits")) || [
+            { name: "💧 Выпить 2 литра воды" },
+            { name: "🏃 Прогулка 30 минут" },
+            { name: "📖 Читать 20 минут" }
+        ];
 
         function renderHabits() {
             const list = document.getElementById("habits-list");
@@ -99,26 +116,17 @@
                 habits.push({ name: name });
                 localStorage.setItem("habits", JSON.stringify(habits));
                 renderHabits();
-                alert('Привычка "' + name + '" добавлена!');
+                alert('Привычка добавлена!');
             }
         }
 
         function completeHabit(index, btn) {
             btn.innerHTML = '✅';
             btn.style.background = '#45a049';
-            alert('Молодец! Привычка отмечена 🔥');
+            alert('Молодец, Ахишке! 🔥');
         }
 
         renderHabits();
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
