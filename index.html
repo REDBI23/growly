@@ -5,59 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Growly - Трекер привычек</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            overflow: hidden;
-        }
-        header {
-            background: #4CAF50;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        h1 {
-            margin: 0;
-            font-size: 28px;
-        }
-        .content {
-            padding: 20px;
-        }
-        .habit {
-            background: #f9f9f9;
-            padding: 15px;
-            margin: 12px 0;
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        button {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 12px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #45a049;
-        }
-        .add-btn {
-            width: 100%;
-            margin-top: 20px;
-            padding: 14px;
-        }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0; padding: 0; min-height: 100vh; }
+        .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); overflow: hidden; }
+        header { background: #4CAF50; color: white; padding: 20px; text-align: center; }
+        h1 { margin: 0; font-size: 28px; }
+        .content { padding: 20px; }
+        .habit { background: #f9f9f9; padding: 15px; margin: 12px 0; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
+        button { background: #4CAF50; color: white; border: none; padding: 12px 20px; border-radius: 12px; cursor: pointer; }
+        button:hover { background: #45a049; }
+        .add-btn { width: 100%; margin-top: 20px; padding: 14px; }
     </style>
 </head>
 <body>
@@ -68,4 +24,64 @@
         </header>
         <div class="content">
             <h2>Сегодня</h2>
-            <div id="habits-list"></div
+            <div id="habits-list"></div>
+            <button class="add-btn" onclick="addHabit()">+ Добавить новую привычку</button>
+        </div>
+    </div>
+
+    <script>
+        let db;
+
+        function initDB() {
+            const request = indexedDB.open("GrowlyDB", 1);
+
+            request.onupgradeneeded = function(e) {
+                db = e.target.result;
+                if (!db.objectStoreNames.contains("habits")) {
+                    db.createObjectStore("habits", { keyPath: "id", autoIncrement: true });
+                }
+            };
+
+            request.onsuccess = function(e) {
+                db = e.target.result;
+                loadHabits();
+            };
+        }
+
+        function loadHabits() {
+            const tx = db.transaction("habits", "readonly");
+            const store = tx.objectStore("habits");
+            const req = store.getAll();
+
+            req.onsuccess = function() {
+                const list = document.getElementById("habits-list");
+                list.innerHTML = "";
+                req.result.forEach(h => {
+                    const div = document.createElement("div");
+                    div.className = "habit";
+                    div.innerHTML = `<span>${h.name}</span><button onclick="completeHabit(${h.id}, this)">✓</button>`;
+                    list.appendChild(div);
+                });
+            };
+        }
+
+        function addHabit() {
+            const name = prompt("Название новой привычки:");
+            if (!name) return;
+
+            const tx = db.transaction("habits", "readwrite");
+            const store = tx.objectStore("habits");
+            store.add({ name: name });
+            tx.oncomplete = loadHabits;
+        }
+
+        function completeHabit(id, btn) {
+            btn.innerHTML = '✅';
+            btn.style.background = '#45a049';
+            alert('Молодец! Привычка отмечена 🔥');
+        }
+
+        window.onload = initDB;
+    </script>
+</body>
+</html>
