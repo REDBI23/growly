@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Growly - Для Ахишке</title>
+    <title>Ахишке - Трекер привычек</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -46,7 +46,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         button {
             background: #4CAF50;
@@ -55,7 +54,6 @@
             padding: 12px 24px;
             border-radius: 12px;
             cursor: pointer;
-            font-size: 16px;
         }
         button:hover {
             background: #45a049;
@@ -66,23 +64,15 @@
             padding: 16px;
             font-size: 18px;
         }
-        .dedication {
-            text-align: center;
-            margin: 20px 0;
-            color: #666;
-            font-style: italic;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🌱 Growly</h1>
+            <h1>🌱 Ахишке</h1>
             <p class="subtitle">Твой трекер привычек</p>
         </header>
         <div class="content">
-            <div class="dedication">Сделано специально для Ахишке ❤️</div>
-            
             <h2>Сегодня</h2>
             <div id="habits-list"></div>
             <button class="add-btn" onclick="addHabit()">+ Добавить новую привычку</button>
